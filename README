@@ -1,0 +1,1 @@
+First try to provide a generator for Rails 3.x that scaffolds a has_many :through relation. See the [stackoverflow question](http://stackoverflow.com/questions/7708848/rails-has-and-belongs-to-many-has-many-through-scaffolding/7709118#7709118) for some context.
