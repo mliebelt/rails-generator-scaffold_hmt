@@ -1,0 +1,3 @@
+# Holds all rules what not to add and commit.
+.*.swp
+

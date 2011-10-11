@@ -1,0 +1,23 @@
+<h1>Listing assemblies</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @assemblies.each do |assembly| %>
+  <tr>
+    <td><%= assembly.name %></td>
+    <td><%= link_to 'Show', assembly %></td>
+    <td><%= link_to 'Edit', edit_assembly_path(assembly) %></td>
+    <td><%= link_to 'Destroy', assembly, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Assembly', new_assembly_path %>
