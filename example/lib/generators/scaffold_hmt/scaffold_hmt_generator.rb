@@ -1,38 +1,41 @@
 class ScaffoldHmtGenerator < Rails::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
 
-  argument :first_name, :type => :string, :description => "Model name of the first part of the join model." 
-  argument :second_name, :type => :string, :description => "Model name of the second part of the join model." 
+  argument :first, :type => :string, :description => "Model name of the first part of the join model." 
+  argument :second, :type => :string, :description => "Model name of the second part of the join model." 
+  attr_reader :first_name, :second_name
 
   def initialize(args, *options)
     super
+    @first_name, @second_name = self.first < self.second ? [self.first.underscore , self.second.underscore] : [self.second.underscore, self.first.underscore]
   end
 
   def create_join_migration 
-##    generate("migration", "create_#{name.pluralize}_#{second_name.pluralize} #{name}_id:integer #{second_name}_id:integer")
+#    puts "Models are: #{fn} and #{sn}"
     template "migration.rb", "db/migrate/#{Time.now.strftime("%Y%m%d%H%M%S")}_create_#{fnp}_#{snp}.rb"
-    template "model.rb", "app/models/#{fn}_#{sn}.rb"
-    insert_hmt(fn, jmn)
-    insert_hmt(sn, jmn)
+    template "model.rb", "app/models/#{fnp}_#{sn}.rb"
+    insert_hmt(fn, sn, jtn)
+    insert_hmt(sn, fn, jtn)
   end
 
 protected
-  def fn; self.first_name.underscore; end
-  def sn; self.second_name.underscore; end
-  def fnc; self.first_name.underscore.capitalize; end
-  def snc; self.second_name.underscore.capitalize; end
-  def fnp; self.first_name.underscore.pluralize; end
-  def snp; self.second_name.underscore.pluralize; end
-  def fnpc; self.first_name.underscore.pluralize.capitalize; end
-  def snpc; self.second_name.underscore.pluralize.capitalize; end
-  def jmn; "#{fn}_#{sn}"; end
+  def fn; self.first_name; end
+  def sn; self.second_name; end
+  def fnc; fn.camelize; end
+  def snc; sn.camelize; end
+  def fnp; fn.pluralize; end
+  def snp; sn.pluralize; end
+  def fnpc; fnp.camelize; end
+  def snpc; snp.camelize; end
+  def jtn; "#{fnp}_#{snp}"; end
 
-  def insert_hmt(model_name, join_model_name)
-    fn = "app/models/#{model_name}.rb"
-    str =  "has_many :#{jmn}\nhas_many :#{model_name}, :through => :#{jmn}" 
-    puts "Try to insert into file: #{fn} the following statements:\n\n"
+  def insert_hmt(model_name, other_model_name, join_table_name)
+    filename = "app/models/#{model_name}.rb"
+    str =  "has_many :#{join_table_name}\nhas_many :#{other_model_name.pluralize}, :through => :#{join_table_name}" 
+    puts "Try to insert into file: #{filename} the following statements:\n\n"
     puts str
-    insert_into_file fn, :after => "class #{model_name.capitalize}.*\n" do
+    puts "\n\n"
+    insert_into_file filename, :after => "class #{model_name.camelize}.*\n" do
       str
     end
   end
