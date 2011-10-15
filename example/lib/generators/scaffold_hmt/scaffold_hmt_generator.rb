@@ -21,7 +21,7 @@ class ScaffoldHmtGenerator < Rails::Generators::Base
   def create_join_migration 
 #    puts "Models are: #{fn} and #{sn}"
     template "migration.rb", "db/migrate/#{Time.now.strftime("%Y%m%d%H%M%S")}_create_#{join_table_name}.rb"
-    template "model.rb", "app/models/#{join_model_name}.rb"
+    template "model.rb", "app/models/#{join_model_name.tableize.singularize}.rb"
     insert_hmt(fn, sn, join_table_name)
     insert_hmt(sn, fn, join_table_name)
   end
