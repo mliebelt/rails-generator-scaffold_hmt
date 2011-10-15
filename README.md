@@ -9,4 +9,9 @@ To use the generator for "has_many :through", you have to do the following steps
 3. The generator will generate or change the following files:
     - Migration `<timestamp>_create_<model1>_<model2>.rb`
     - Model file `<model1>s_<model2>.rb`
-    - Insert into <model1>.rb and <model2>.rb the `has_many :through` relations.
+    - Insert into `<model1>.rb` and `<model2>.rb` the `has_many :through` relations.
+
+The mandatory arguments for the generator are the model names. They will be sorted alphabetically if necessary. If a third argument (the join model name) is given, it will be used, if not, it will be computed:
+
+    join table name: `<model1>s_<model2>s`
+    join model name: `<Model1>s<Model2>`
